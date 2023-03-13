@@ -1,11 +1,10 @@
 package com.w1866973.diceroller
 
-import android.graphics.Color
+import android.app.Dialog
 import android.net.Uri
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -69,6 +68,9 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun throwDice(view: View) {
+        for (die in humanDice) {
+            die.isClickable = true
+        }
         humanThrowCount++
 
         throwSinglePartyDice(humanDice, humanDiceValues)
@@ -123,7 +125,7 @@ class GameActivity : AppCompatActivity() {
         calculateScore()
     }
 
-    private fun computerRethrow(){
+    private fun computerRethrow() {
         val rand = Random()
 
         //decide keep a die or not
@@ -160,13 +162,23 @@ class GameActivity : AppCompatActivity() {
 
         for (die in humanDice) {
             die.isSelected = false
+            die.isClickable = false
             changeDieColor(die)
         }
 
-        if(humanScore >= WINNING_MARK){
-            //human win
-        } else if (computerScore >= WINNING_MARK){
-            //computer win
+
+        if (humanScore >= WINNING_MARK && computerScore >= WINNING_MARK) {
+            if (humanScore > computerScore) {
+                showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
+            } else if (computerScore > humanScore) {
+                showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
+            } else {
+                println("It's a tie!")
+            }
+        } else if (humanScore >= WINNING_MARK) {
+            showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
+        } else if (computerScore >= WINNING_MARK) {
+            showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
         } else {
             round++
             roundLabel.text = round.toString()
@@ -193,4 +205,15 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    private fun showPopupWindow(message: String, textColor: Int) {
+        val dialog = Dialog(this)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.game_result_window)
+
+        val messageTextView = dialog.findViewById<TextView>(R.id.lblWinningStatus)
+        messageTextView.text = message
+        messageTextView.setTextColor(textColor)
+
+        dialog.show()
+    }
 }
