@@ -2,14 +2,15 @@ package com.w1866973.diceroller
 
 import android.app.Dialog
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.*
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import java.util.*
+
 
 class GameActivity : AppCompatActivity() {
     var humanScore: Int = 0
@@ -65,6 +66,11 @@ class GameActivity : AppCompatActivity() {
         humanDice = arrayOf(humanDie1, humanDie2, humanDie3, humanDie4, humanDie5)
         computerDice =
             arrayOf(computerDie1, computerDie2, computerDie3, computerDie4, computerDie5)
+    }
+
+    override fun onBackPressed() {
+        onBackPressedDispatcher.onBackPressed()
+        finish()
     }
 
     fun throwDice(view: View) {
@@ -207,8 +213,11 @@ class GameActivity : AppCompatActivity() {
 
     private fun showPopupWindow(message: String, textColor: Int) {
         val dialog = Dialog(this)
-        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
         dialog.setContentView(R.layout.game_result_window)
+        dialog.setOnCancelListener {
+            finish()
+        }
 
         val messageTextView = dialog.findViewById<TextView>(R.id.lblWinningStatus)
         messageTextView.text = message
