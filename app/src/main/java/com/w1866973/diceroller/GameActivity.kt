@@ -21,6 +21,7 @@ class GameActivity : AppCompatActivity() {
     val WINNING_MARK: Int = 101
     val humanDiceValues = arrayOf(0, 0, 0, 0, 0)
     val computerDiceValues = arrayOf(0, 0, 0, 0, 0)
+    var isTie: Boolean = false
 
     lateinit var humanDie1: ImageView
     lateinit var humanDie2: ImageView
@@ -74,9 +75,15 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun throwDice(view: View) {
-        for (die in humanDice) {
-            die.isClickable = true
+        if(!isTie){
+            for (die in humanDice) {
+                die.isClickable = true
+            }
+
+            scoreButton.isEnabled = true
+            throwButton.text = "Rethrow"
         }
+
         humanThrowCount++
 
         throwSinglePartyDice(humanDice, humanDiceValues)
@@ -85,10 +92,9 @@ class GameActivity : AppCompatActivity() {
             throwSinglePartyDice(computerDice, computerDiceValues)
         }
 
-        scoreButton.isEnabled = true
-        throwButton.text = "Rethrow"
 
-        if (humanThrowCount > 2) {
+
+        if (humanThrowCount > 2 || isTie) {
             //sample computer strategy
             val rand = Random()
             //decide re-roll or not
@@ -143,6 +149,7 @@ class GameActivity : AppCompatActivity() {
         throwSinglePartyDice(computerDice, computerDiceValues)
     }
 
+    var i = 1
     private fun calculateScore() {
         val scoreButton = findViewById<Button>(R.id.btnScore)
         val throwButton = findViewById<Button>(R.id.btnThrow)
@@ -172,14 +179,13 @@ class GameActivity : AppCompatActivity() {
             changeDieColor(die)
         }
 
-
         if (humanScore >= WINNING_MARK && computerScore >= WINNING_MARK) {
             if (humanScore > computerScore) {
                 showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
             } else if (computerScore > humanScore) {
                 showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
             } else {
-                println("It's a tie!")
+                isTie = true
             }
         } else if (humanScore >= WINNING_MARK) {
             showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
