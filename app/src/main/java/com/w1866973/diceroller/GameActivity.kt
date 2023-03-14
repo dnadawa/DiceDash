@@ -18,10 +18,10 @@ class GameActivity : AppCompatActivity() {
     var humanThrowCount: Int = 0
     var computerThrowCount: Int = 0
     var round: Int = 1
-    val WINNING_MARK: Int = 101
     val humanDiceValues = arrayOf(0, 0, 0, 0, 0)
     val computerDiceValues = arrayOf(0, 0, 0, 0, 0)
     var isTie: Boolean = false
+    var WINNING_MARK: Int = 101
 
     lateinit var humanDie1: ImageView
     lateinit var humanDie2: ImageView
@@ -46,6 +46,7 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        WINNING_MARK = intent.getIntExtra("winningScore", WINNING_MARK)
 
         humanDie1 = findViewById<ImageView>(R.id.humDie1)
         humanDie2 = findViewById<ImageView>(R.id.humDie2)
@@ -220,7 +221,7 @@ class GameActivity : AppCompatActivity() {
     private fun showPopupWindow(message: String, textColor: Int) {
         val dialog = Dialog(this)
         dialog.setCanceledOnTouchOutside(false)
-        dialog.setContentView(R.layout.game_result_window)
+        dialog.setContentView(R.layout.game_result_dialog)
         dialog.setOnCancelListener {
             finish()
         }
