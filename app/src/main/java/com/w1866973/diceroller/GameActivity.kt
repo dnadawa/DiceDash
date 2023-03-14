@@ -22,6 +22,8 @@ class GameActivity : AppCompatActivity() {
     val computerDiceValues = arrayOf(0, 0, 0, 0, 0)
     var isTie: Boolean = false
     var WINNING_MARK: Int = 101
+    var humanWinCount: Int = 0
+    var computerWinCount: Int = 0
 
     lateinit var humanDie1: ImageView
     lateinit var humanDie2: ImageView
@@ -39,6 +41,8 @@ class GameActivity : AppCompatActivity() {
     lateinit var throwButton: Button
 
     lateinit var roundLabel: TextView
+    lateinit var humanWinsLabel: TextView
+    lateinit var computerWinsLabel: TextView
 
     private lateinit var humanDice: Array<ImageView>
     private lateinit var computerDice: Array<ImageView>
@@ -47,6 +51,15 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         WINNING_MARK = intent.getIntExtra("winningScore", WINNING_MARK)
+        humanWinCount = intent.getIntExtra("humanWinCount", 0)
+        computerWinCount = intent.getIntExtra("computerWinCount", 0)
+
+        roundLabel = findViewById<TextView>(R.id.lblRound)
+        humanWinsLabel = findViewById<TextView>(R.id.lblHumanWins)
+        computerWinsLabel = findViewById<TextView>(R.id.lblComputerWins)
+
+        humanWinsLabel.text = humanWinCount.toString()
+        computerWinsLabel.text = computerWinCount.toString()
 
         humanDie1 = findViewById<ImageView>(R.id.humDie1)
         humanDie2 = findViewById<ImageView>(R.id.humDie2)
@@ -63,16 +76,9 @@ class GameActivity : AppCompatActivity() {
         scoreButton = findViewById<Button>(R.id.btnScore)
         throwButton = findViewById<Button>(R.id.btnThrow)
 
-        roundLabel = findViewById<TextView>(R.id.lblRound)
-
         humanDice = arrayOf(humanDie1, humanDie2, humanDie3, humanDie4, humanDie5)
         computerDice =
             arrayOf(computerDie1, computerDie2, computerDie3, computerDie4, computerDie5)
-    }
-
-    override fun onBackPressed() {
-        onBackPressedDispatcher.onBackPressed()
-        finish()
     }
 
     fun throwDice(view: View) {
@@ -150,7 +156,6 @@ class GameActivity : AppCompatActivity() {
         throwSinglePartyDice(computerDice, computerDiceValues)
     }
 
-    var i = 1
     private fun calculateScore() {
         val scoreButton = findViewById<Button>(R.id.btnScore)
         val throwButton = findViewById<Button>(R.id.btnThrow)
@@ -182,15 +187,19 @@ class GameActivity : AppCompatActivity() {
 
         if (humanScore >= WINNING_MARK && computerScore >= WINNING_MARK) {
             if (humanScore > computerScore) {
+                humanWinCount++
                 showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
             } else if (computerScore > humanScore) {
+                computerWinCount++
                 showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
             } else {
                 isTie = true
             }
         } else if (humanScore >= WINNING_MARK) {
+            humanWinCount++
             showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
         } else if (computerScore >= WINNING_MARK) {
+            computerWinCount++
             showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
         } else {
             round++
@@ -223,6 +232,9 @@ class GameActivity : AppCompatActivity() {
         dialog.setCanceledOnTouchOutside(false)
         dialog.setContentView(R.layout.game_result_dialog)
         dialog.setOnCancelListener {
+            intent.putExtra("humanWinCount", humanWinCount)
+            intent.putExtra("computerWinCount", computerWinCount)
+            setResult(RESULT_OK, intent)
             finish()
         }
 
