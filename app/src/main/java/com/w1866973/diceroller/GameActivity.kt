@@ -372,7 +372,6 @@ class GameActivity : AppCompatActivity() {
         val inflater: LayoutInflater =
             getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView: View = inflater.inflate(R.layout.settings_dialog, null)
-        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_show)
 
         val popupWindow = PopupWindow(
             popupView,
@@ -380,7 +379,7 @@ class GameActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-
+        popupWindow.animationStyle = R.style.PopUpAnimation
         popupWindow.isFocusable = true
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
 
@@ -391,10 +390,10 @@ class GameActivity : AppCompatActivity() {
         val adapter: ArrayAdapter<Difficulty> =
             ArrayAdapter<Difficulty>(
                 this,
-                android.R.layout.simple_spinner_item,
+                R.layout.spinner_item,
                 Difficulty.values()
             )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
         spinner.adapter = adapter
 
 

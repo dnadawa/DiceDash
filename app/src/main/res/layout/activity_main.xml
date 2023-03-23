@@ -9,7 +9,7 @@
         android:layout_height="fill_parent"
         android:scaleType="fitCenter"
         android:backgroundTint="@color/background"
-        android:src="@drawable/dice_back5" />
+        android:src="@drawable/dice_back" />
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
