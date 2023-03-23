@@ -1,16 +1,31 @@
 package com.w1866973.diceroller
 
 import android.app.Dialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.PopupWindow
+import android.widget.PopupWindow.INPUT_METHOD_NEEDED
+import android.widget.PopupWindow.INPUT_METHOD_NOT_NEEDED
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import java.util.*
 
+//https://www.baeldung.com/kotlin/enum
+enum class Difficulty {
+    EASY,
+    HARD
+}
 
 class GameActivity : AppCompatActivity() {
     var humanScore: Int = 0
@@ -24,6 +39,7 @@ class GameActivity : AppCompatActivity() {
     var WINNING_MARK: Int = 101
     var humanWinCount: Int = 0
     var computerWinCount: Int = 0
+    val difficulty: Difficulty = Difficulty.HARD
 
     lateinit var humanDie1: ImageView
     lateinit var humanDie2: ImageView
@@ -82,19 +98,19 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun throwDice(view: View) {
-        if(!isTie){
+        if (!isTie) {
             for (die in humanDice) {
                 die.isClickable = true
             }
 
             scoreButton.isEnabled = true
-            throwButton.text = "Rethrow"
         }
 
         humanThrowCount++
 
         throwSinglePartyDice(humanDice, humanDiceValues)
         if (humanThrowCount == 1) {
+            println("Computer throwing")
             computerThrowCount++
             throwSinglePartyDice(computerDice, computerDiceValues)
         }
@@ -102,16 +118,16 @@ class GameActivity : AppCompatActivity() {
 
 
         if (humanThrowCount > 2 || isTie) {
-            //sample computer strategy
-            val rand = Random()
-            //decide re-roll or not
-            if (rand.nextInt(10) < 5) {
-                computerRethrow()
-            }
-            if (rand.nextInt(10) < 5) {
-                computerRethrow()
+            if (!isTie) {
+
+                if (difficulty == Difficulty.HARD) {
+                    computerHardStrategy()
+                } else {
+                    computerEasyStrategy()
+                }
             }
 
+            println("outside hard strategy")
             calculateScore()
         }
     }
@@ -131,29 +147,116 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun onScoreButtonPressed(view: View) {
-        //sample computer strategy
-        val rand = Random()
-        //decide re-roll or not
-        if (rand.nextInt(10) < 5) {
-            computerRethrow()
-        }
-        if (rand.nextInt(10) < 5) {
-            computerRethrow()
+        if (difficulty == Difficulty.HARD) {
+            computerHardStrategy()
+        } else {
+            computerEasyStrategy()
         }
 
         calculateScore()
     }
 
-    private fun computerRethrow() {
+    private fun computerEasyStrategy() {
+        println("Entered into easy strategy")
         val rand = Random()
 
-        //decide keep a die or not
-        if (rand.nextInt(10) < 5) {
-            val keepingDie = rand.nextInt(5)
-            computerDice[keepingDie].isSelected = true
+        val reRolls: Int = rand.nextInt(3)
+        for (i in 0 until reRolls) {
+            println("Rerolling")
+            val numberOfDiceToKeep: Int = rand.nextInt(5)
+            println("no of dice keeping: $numberOfDiceToKeep")
+            var count: Int = 0
+            val uniqueKeptDice = mutableSetOf<Int>()
+            while (count < numberOfDiceToKeep) {
+                var keepingDie = rand.nextInt(5)
+                while (uniqueKeptDice.contains(keepingDie)) {
+                    keepingDie = rand.nextInt(5)
+                }
+                uniqueKeptDice.add(keepingDie)
+                println("keeping die: $keepingDie")
+                computerDice[keepingDie].isSelected = true
+                count++
+            }
+            throwSinglePartyDice(computerDice, computerDiceValues)
+
+            //clearing all selected dice
+            for (die in computerDice) {
+                die.isSelected = false
+            }
+        }
+    }
+
+    private fun computerHardStrategy() {
+        println("human : " + humanScore)
+        println("computer : " + computerScore)
+
+        var remainingReRolls: Int = 2
+        while (remainingReRolls > 0) {
+            println("Inside while remaining rerolls: $remainingReRolls")
+
+            //calculate current roll of the computer
+            var currentRollScore: Int = 0
+            for (score in computerDiceValues) {
+                println("Computer dices: $score")
+                currentRollScore += score
+            }
+            println("Current round computer score: $currentRollScore")
+
+            //determine threshold value
+            val thresholdPercentage: Int = 20
+            val thresholdValue: Int = WINNING_MARK * thresholdPercentage / 100
+            println("thresholdValue $thresholdValue")
+
+            if (computerScore + currentRollScore >= WINNING_MARK - thresholdValue) {
+                println("Computer is closer to the target score")
+                val endRound = keepOrReRoll(arrayOf(4, 5, 6))
+                if (endRound) {
+                    println("end of round")
+                    break
+                }
+            } else {
+                println("Computer is NOT closer to the target score")
+                if (humanScore + 18 > computerScore + currentRollScore) {
+                    println("human wining")
+                    val endRound = keepOrReRoll(arrayOf(4, 5, 6))
+                    if (endRound) {
+                        println("end of round")
+                        break
+                    }
+                } else {
+                    println("Computer wining")
+                    val endRound = keepOrReRoll(arrayOf(3, 4, 5, 6))
+                    if (endRound) {
+                        println("end of round")
+                        break
+                    }
+                }
+            }
+            remainingReRolls--
+        }
+        println("While end")
+    }
+
+    private fun keepOrReRoll(keepingValues: Array<Int>): Boolean {
+        var isReRoll: Boolean = false
+        for (i in 0..4) {
+            if (computerDiceValues[i] in keepingValues) {
+                println("die face ${computerDiceValues[i]} is keeping")
+                computerDice[i].isSelected = true
+            } else {
+                println("die face ${computerDiceValues[i]} is NOT keeping")
+                isReRoll = true
+            }
         }
 
-        throwSinglePartyDice(computerDice, computerDiceValues)
+        if (isReRoll) {
+            println("Rerolling")
+            throwSinglePartyDice(computerDice, computerDiceValues)
+            return false
+        } else {
+            println("not rerolling")
+            return true
+        }
     }
 
     private fun calculateScore() {
@@ -163,7 +266,6 @@ class GameActivity : AppCompatActivity() {
         val humanScoreLabel = findViewById<TextView>(R.id.lblHumScore)
         val computerScoreLabel = findViewById<TextView>(R.id.lblCompScore)
 
-        throwButton.text = "Throw"
         scoreButton.isEnabled = false
 
         for (n in humanDiceValues) {
@@ -184,8 +286,12 @@ class GameActivity : AppCompatActivity() {
             die.isClickable = false
             changeDieColor(die)
         }
+        for (die in computerDice) {
+            die.isSelected = false
+        }
 
-        if (humanScore >= WINNING_MARK && computerScore >= WINNING_MARK) {
+
+        if (humanScore >= WINNING_MARK) {
             if (humanScore > computerScore) {
                 humanWinCount++
                 showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
@@ -195,9 +301,6 @@ class GameActivity : AppCompatActivity() {
             } else {
                 isTie = true
             }
-        } else if (humanScore >= WINNING_MARK) {
-            humanWinCount++
-            showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
         } else if (computerScore >= WINNING_MARK) {
             computerWinCount++
             showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
@@ -228,20 +331,37 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun showPopupWindow(message: String, textColor: Int) {
-        val dialog = Dialog(this)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setContentView(R.layout.game_result_dialog)
-        dialog.setOnCancelListener {
-            intent.putExtra("humanWinCount", humanWinCount)
-            intent.putExtra("computerWinCount", computerWinCount)
-            setResult(RESULT_OK, intent)
-            finish()
-        }
+        val inflater: LayoutInflater =
+            getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView: View = inflater.inflate(R.layout.game_result_dialog, null)
+        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_animation)
 
-        val messageTextView = dialog.findViewById<TextView>(R.id.lblWinningStatus)
+        val messageTextView = popupView.findViewById<TextView>(R.id.lblWinningStatus)
         messageTextView.text = message
         messageTextView.setTextColor(textColor)
 
-        dialog.show()
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+
+        // Create an overlay view that covers the entire screen except for the popup window
+        val parentView = window.decorView.rootView as ViewGroup
+        val overlayView = View(this)
+        overlayView.setBackgroundColor(Color.parseColor("#88000000"))
+        val params = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        parentView.addView(overlayView, params)
+        overlayView.setOnClickListener {
+            intent.putExtra("humanWinCount", humanWinCount)
+            intent.putExtra("computerWinCount", computerWinCount)
+            setResult(RESULT_OK, intent)
+        }
+
     }
 }

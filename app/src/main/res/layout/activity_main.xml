@@ -16,13 +16,6 @@
         android:onClick="startNewGame"/>
 
     <Button
-        android:id="@+id/btnSetScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="showSetScoreDialog"
-        android:text="Set Score" />
-
-    <Button
         android:id="@+id/btnAbout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
