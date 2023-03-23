@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:background="@color/image_background"
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnNewGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/new_game"
-        android:onClick="startNewGame"/>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@color/background"
+        android:src="@drawable/dice_back5" />
 
-    <Button
-        android:id="@+id/btnAbout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/about"
-        android:onClick="showAboutDialog"/>
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|bottom"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnNewGame"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/secondary"
+            android:onClick="startNewGame"
+            android:padding="15dp"
+            android:text="@string/new_game"
+            android:textColor="@color/white" />
+
+        <Button
+            android:layout_marginBottom="60dp"
+            android:id="@+id/btnAbout"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary"
+            android:onClick="showAboutDialog"
+            android:padding="15dp"
+            android:text="@string/about"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+</FrameLayout>
+

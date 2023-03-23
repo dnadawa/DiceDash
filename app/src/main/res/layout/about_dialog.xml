@@ -1,28 +1,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/pop_up_background"
     android:orientation="vertical"
-    android:padding="50dp">
+    android:padding="30dp">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student ID : w1866973"
-        android:textColor="@color/black" />
+        android:text="Student ID : w1866973 | 20200539"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="16sp"
         android:text="Name: W.G. Dulaj Nadawa"
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="15sp"
+        android:lineSpacingExtra="4dp"
         android:text="I confirm that I understand what plagiarism is and have read and understood the section on Assessment Offences in the Essential Information for Students. The work that I have submitted is entirely my own. Any work from other authors is duly referenced and acknowledged."
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
 </LinearLayout>

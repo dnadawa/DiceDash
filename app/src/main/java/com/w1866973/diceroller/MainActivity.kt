@@ -1,17 +1,15 @@
 package com.w1866973.diceroller
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.EditText
 import android.widget.PopupWindow
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,8 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     fun showAboutDialog(view: View) {
         val inflater: LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popupView : View = inflater.inflate(R.layout.activity_about_dialog, null)
-        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_animation)
+        val popupView : View = inflater.inflate(R.layout.about_dialog, null)
 
         val popupWindow = PopupWindow(
             popupView,
@@ -52,8 +49,23 @@ class MainActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        popupWindow.animationStyle = R.style.PopUpAnimation
         popupWindow.isOutsideTouchable = true
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+
+        // Create an overlay view that covers the entire screen except for the popup window
+        val parentView = window.decorView.rootView as ViewGroup
+        val overlayView = View(this)
+        overlayView.setBackgroundColor(Color.parseColor("#88000000"))
+        val params = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        parentView.addView(overlayView, params)
+        overlayView.setOnClickListener {
+            popupWindow.dismiss()
+            parentView.removeView(overlayView)
+        }
     }
 
     fun startNewGame(view: View){

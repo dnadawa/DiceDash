@@ -342,7 +342,7 @@ class GameActivity : AppCompatActivity() {
         val inflater: LayoutInflater =
             getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView: View = inflater.inflate(R.layout.game_result_dialog, null)
-        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_animation)
+        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_show)
 
         val messageTextView = popupView.findViewById<TextView>(R.id.lblWinningStatus)
         messageTextView.text = message
@@ -359,7 +359,7 @@ class GameActivity : AppCompatActivity() {
         // Create an overlay view that covers the entire screen except for the popup window
         val parentView = window.decorView.rootView as ViewGroup
         val overlayView = View(this)
-        overlayView.setBackgroundColor(Color.parseColor("#88000000"))
+        overlayView.setBackgroundResource(R.color.dimmed_background)
         val params = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
@@ -372,7 +372,7 @@ class GameActivity : AppCompatActivity() {
         val inflater: LayoutInflater =
             getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView: View = inflater.inflate(R.layout.settings_dialog, null)
-        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_animation)
+        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_show)
 
         val popupWindow = PopupWindow(
             popupView,

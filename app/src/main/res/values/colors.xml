@@ -9,4 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#43A047</color>
     <color name="red">#E53935</color>
+
+
+    <color name="background">#0F0E22</color>
+    <color name="image_background">#0F1110</color>
+    <color name="primary">#2D3FDD</color>
+    <color name="secondary">#DD2C98</color>
+    <color name="dimmed_background">#88000000</color>
 </resources>
