@@ -22,14 +22,11 @@ class MainActivity : AppCompatActivity() {
     private var WINNING_SCORE: Int = 101
     private var humanWinCount: Int = 0
     private var computerWinCount: Int = 0
-    lateinit var dialog: Dialog
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        dialog = Dialog(this)
-
 
         //https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
         resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -61,27 +58,10 @@ class MainActivity : AppCompatActivity() {
 
     fun startNewGame(view: View){
         val intent = Intent(this, GameActivity::class.java)
-        intent.putExtra("winningScore", WINNING_SCORE)
+//        intent.putExtra("winningScore", WINNING_SCORE)
         intent.putExtra("humanWinCount", humanWinCount)
         intent.putExtra("computerWinCount", computerWinCount)
         resultLauncher.launch(intent)
-    }
-
-
-
-    fun showSetScoreDialog(view: View){
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setTitle("Set Score")
-        dialog.setContentView(R.layout.set_score_dialog)
-        dialog.show()
-    }
-
-    fun setScore(view: View){
-        val enteredScore = dialog.findViewById<EditText>(R.id.txtScore).text.toString()
-        if(enteredScore.trim().isNotEmpty()){
-            WINNING_SCORE = Integer.parseInt(enteredScore)
-        }
-        dialog.dismiss()
     }
 
 }

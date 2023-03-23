@@ -129,7 +129,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
@@ -149,7 +151,16 @@
             android:enabled="false"
             android:onClick="onScoreButtonPressed"
             android:text="Score" />
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Settings"
+        android:onClick="showSettingsDialog"/>
 
     <View
         android:id="@+id/divider2"

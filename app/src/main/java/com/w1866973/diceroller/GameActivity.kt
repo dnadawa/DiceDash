@@ -1,9 +1,7 @@
 package com.w1866973.diceroller
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
@@ -11,12 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.PopupWindow
-import android.widget.PopupWindow.INPUT_METHOD_NEEDED
-import android.widget.PopupWindow.INPUT_METHOD_NOT_NEEDED
-import android.widget.TextView
+import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import java.util.*
@@ -39,7 +33,7 @@ class GameActivity : AppCompatActivity() {
     var WINNING_MARK: Int = 101
     var humanWinCount: Int = 0
     var computerWinCount: Int = 0
-    val difficulty: Difficulty = Difficulty.HARD
+    var difficulty: Difficulty = Difficulty.EASY
 
     lateinit var humanDie1: ImageView
     lateinit var humanDie2: ImageView
@@ -66,7 +60,7 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        WINNING_MARK = intent.getIntExtra("winningScore", WINNING_MARK)
+//        WINNING_MARK = intent.getIntExtra("winningScore", WINNING_MARK)
         humanWinCount = intent.getIntExtra("humanWinCount", 0)
         computerWinCount = intent.getIntExtra("computerWinCount", 0)
 
@@ -95,9 +89,23 @@ class GameActivity : AppCompatActivity() {
         humanDice = arrayOf(humanDie1, humanDie2, humanDie3, humanDie4, humanDie5)
         computerDice =
             arrayOf(computerDie1, computerDie2, computerDie3, computerDie4, computerDie5)
+
+        //custom back behaviour
+        //https://stackoverflow.com/questions/58256210/how-to-make-custom-back-button-to-go-back-to-certain-destination-using-navigatio
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                intent.putExtra("humanWinCount", humanWinCount)
+                intent.putExtra("computerWinCount", computerWinCount)
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+        })
     }
 
     fun throwDice(view: View) {
+        val settingsButton: Button = findViewById(R.id.btnSettings)
+        settingsButton.isEnabled = false
+
         if (!isTie) {
             for (die in humanDice) {
                 die.isClickable = true
@@ -357,11 +365,46 @@ class GameActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         parentView.addView(overlayView, params)
-        overlayView.setOnClickListener {
-            intent.putExtra("humanWinCount", humanWinCount)
-            intent.putExtra("computerWinCount", computerWinCount)
-            setResult(RESULT_OK, intent)
-        }
+        overlayView.setOnClickListener {}
+    }
 
+    fun showSettingsDialog(view: View) {
+        val inflater: LayoutInflater =
+            getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView: View = inflater.inflate(R.layout.settings_dialog, null)
+        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_animation)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+
+        popupWindow.isFocusable = true
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+
+        //spinner
+        //https://www.geeksforgeeks.org/spinner-in-android-using-java-with-example/
+        val spinner: Spinner = popupView.findViewById(R.id.difficulty)
+
+        val adapter: ArrayAdapter<Difficulty> =
+            ArrayAdapter<Difficulty>(
+                this,
+                android.R.layout.simple_spinner_item,
+                Difficulty.values()
+            )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
+        spinner.adapter = adapter
+
+
+        popupView.findViewById<Button>(R.id.btnSave).setOnClickListener {
+            difficulty = spinner.selectedItem as Difficulty
+            val enteredScore = popupView.findViewById<EditText>(R.id.txtScore).text.toString()
+            if (enteredScore.trim().isNotEmpty()) {
+                WINNING_MARK = Integer.parseInt(enteredScore)
+            }
+            popupWindow.dismiss()
+        }
     }
 }
