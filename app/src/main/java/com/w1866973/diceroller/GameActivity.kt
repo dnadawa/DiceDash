@@ -327,7 +327,7 @@ class GameActivity : AppCompatActivity() {
     private fun changeDieColor(imageView: ImageView) {
         if (imageView.isSelected) {
             imageView.setColorFilter(
-                ContextCompat.getColor(this, R.color.purple_700),
+                ContextCompat.getColor(this, R.color.primary),
                 android.graphics.PorterDuff.Mode.ADD
             )
         } else {

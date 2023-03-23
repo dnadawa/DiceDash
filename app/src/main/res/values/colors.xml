@@ -16,4 +16,5 @@
     <color name="primary">#2D3FDD</color>
     <color name="secondary">#DD2C98</color>
     <color name="dimmed_background">#88000000</color>
+    <color name="text_transparent">#AAFFFFFF</color>
 </resources>
