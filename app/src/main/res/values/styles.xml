@@ -4,4 +4,7 @@
         <item name="android:windowEnterAnimation">@anim/pop_up_show</item>
         <item name="android:windowExitAnimation">@anim/pop_up_hide</item>
     </style>
+    <style name="ProgressColor">
+        <item name="colorAccent">@color/secondary</item>
+    </style>
 </resources>
