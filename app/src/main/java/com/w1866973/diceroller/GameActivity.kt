@@ -302,15 +302,18 @@ class GameActivity : AppCompatActivity() {
         if (humanScore >= WINNING_MARK) {
             if (humanScore > computerScore) {
                 humanWinCount++
+                humanWinsLabel.text = humanWinCount.toString()
                 showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
             } else if (computerScore > humanScore) {
                 computerWinCount++
+                computerWinsLabel.text = computerWinCount.toString()
                 showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
             } else {
                 isTie = true
             }
         } else if (computerScore >= WINNING_MARK) {
             computerWinCount++
+            computerWinsLabel.text = computerWinCount.toString()
             showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
         } else {
             round++
@@ -342,7 +345,6 @@ class GameActivity : AppCompatActivity() {
         val inflater: LayoutInflater =
             getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView: View = inflater.inflate(R.layout.game_result_dialog, null)
-        popupView.animation = AnimationUtils.loadAnimation(this, R.anim.pop_up_show)
 
         val messageTextView = popupView.findViewById<TextView>(R.id.lblWinningStatus)
         messageTextView.text = message
@@ -354,6 +356,7 @@ class GameActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        popupWindow.animationStyle = R.style.PopUpAnimation
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
 
         // Create an overlay view that covers the entire screen except for the popup window
