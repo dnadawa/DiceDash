@@ -7,6 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:background="@color/background"
+    tools:ignore="UsingOnClickInXml"
     tools:context=".GameActivity">
 
     <LinearLayout
@@ -39,7 +40,7 @@
                     android:id="@+id/lblHumanWins"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00"
+                    android:text="@string/zero"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -56,7 +57,7 @@
                     android:id="@+id/lblComputerWins"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00"
+                    android:text="@string/zero"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/text_transparent"
-                android:text="Rounds Won" />
+                android:text="@string/rounds_won" />
 
         </LinearLayout>
 
@@ -101,7 +102,7 @@
                     android:id="@+id/lblHumScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00"
+                    android:text="@string/zero"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -118,7 +119,7 @@
                     android:id="@+id/lblCompScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00"
+                    android:text="@string/zero"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -130,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/text_transparent"
-                android:text="Current Score" />
+                android:text="@string/current_score" />
 
         </LinearLayout>
     </LinearLayout>
@@ -150,7 +151,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:text="Round" />
+            android:text="@string/round" />
 
         <TextView
             android:id="@+id/lblRound"
@@ -160,7 +161,7 @@
             android:textStyle="bold"
             android:layout_marginStart="5dp"
             android:textSize="16sp"
-            android:text="1" />
+            android:text="@string/_1" />
     </LinearLayout>
 
     <LinearLayout
@@ -173,7 +174,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
+            android:contentDescription="@string/die1"
             android:onClick="toggleSelected"
+            tools:ignore="DuplicateSpeakableTextCheck"
             tools:srcCompat="@drawable/die1" />
 
         <ImageView
@@ -181,7 +184,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
+            android:contentDescription="@string/die2"
             android:onClick="toggleSelected"
+            tools:ignore="DuplicateSpeakableTextCheck"
             tools:srcCompat="@drawable/die1" />
     </LinearLayout>
 
@@ -196,7 +201,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
+            android:contentDescription="@string/die3"
             android:onClick="toggleSelected"
+            tools:ignore="DuplicateSpeakableTextCheck"
             tools:srcCompat="@drawable/die1" />
 
         <ImageView
@@ -204,7 +211,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
+            android:contentDescription="@string/die4"
             android:onClick="toggleSelected"
+            tools:ignore="DuplicateSpeakableTextCheck"
             tools:srcCompat="@drawable/die1" />
 
         <ImageView
@@ -212,7 +221,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
+            android:contentDescription="@string/die5"
             android:onClick="toggleSelected"
+            tools:ignore="DuplicateSpeakableTextCheck"
             tools:srcCompat="@drawable/die1" />
     </LinearLayout>
 
@@ -221,7 +232,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="Player"
+        android:text="@string/player"
         android:textColor="@color/text_transparent"
         android:textSize="20sp" />
 
@@ -249,10 +260,11 @@
             android:layout_weight="1"
             android:onClick="throwDice"
             android:padding="10dp"
-            android:text="Throw"
+            android:text="@string/throwText"
             android:textColor="@color/white"
             app:cornerRadius="10dp"
-            app:rippleColor="@color/secondary" />
+            app:rippleColor="@color/secondary"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btnScore"
@@ -263,10 +275,11 @@
             android:enabled="false"
             android:onClick="onScoreButtonPressed"
             android:padding="10dp"
-            android:text="Score"
+            android:text="@string/score"
             android:textColor="@color/white"
             app:cornerRadius="10dp"
-            app:rippleColor="@color/secondary" />
+            app:rippleColor="@color/secondary"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 
@@ -278,7 +291,7 @@
         android:layout_marginBottom="20dp"
         android:onClick="showSettingsDialog"
         android:padding="10dp"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textColor="@color/white"
         app:cornerRadius="10dp"
         app:rippleColor="@color/secondary" />
@@ -297,7 +310,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="Computer"
+        android:text="@string/computer"
         android:textColor="@color/text_transparent"
         android:textSize="20sp" />
 
@@ -311,21 +324,24 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
-            tools:srcCompat="@drawable/die1" />
+            tools:srcCompat="@drawable/die1"
+            android:contentDescription="@string/die1" />
 
         <ImageView
             android:id="@+id/compDie2"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
-            tools:srcCompat="@drawable/die1" />
+            tools:srcCompat="@drawable/die1"
+            android:contentDescription="@string/die2" />
 
         <ImageView
             android:id="@+id/compDie3"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
-            tools:srcCompat="@drawable/die1" />
+            tools:srcCompat="@drawable/die1"
+            android:contentDescription="@string/die3" />
     </LinearLayout>
 
     <LinearLayout
@@ -339,14 +355,16 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
-            tools:srcCompat="@drawable/die1" />
+            tools:srcCompat="@drawable/die1"
+            android:contentDescription="@string/die4" />
 
         <ImageView
             android:id="@+id/compDie5"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="1"
-            tools:srcCompat="@drawable/die1" />
+            tools:srcCompat="@drawable/die1"
+            android:contentDescription="@string/die5" />
     </LinearLayout>
 
 </LinearLayout>

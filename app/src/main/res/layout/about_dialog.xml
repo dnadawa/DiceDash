@@ -9,7 +9,7 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student ID : w1866973 | 20200539"
+        android:text="@string/studentId"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginBottom="5dp"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:text="Name: W.G. Dulaj Nadawa"
+        android:text="@string/name"
         android:textColor="@color/white" />
 
     <TextView
@@ -31,6 +31,6 @@
         android:layout_marginTop="20dp"
         android:textSize="15sp"
         android:lineSpacingExtra="4dp"
-        android:text="I confirm that I understand what plagiarism is and have read and understood the section on Assessment Offences in the Essential Information for Students. The work that I have submitted is entirely my own. Any work from other authors is duly referenced and acknowledged."
+        android:text="@string/aboutText"
         android:textColor="@color/white" />
 </LinearLayout>

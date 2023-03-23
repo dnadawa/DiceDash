@@ -2,4 +2,27 @@
     <string name="app_name">Dice Roller</string>
     <string name="new_game">New Game</string>
     <string name="about">About</string>
+    <string name="studentId">Student ID : w1866973 | 20200539</string>
+    <string name="name">Name: W.G. Dulaj Nadawa</string>
+    <string name="aboutText">I confirm that I understand what plagiarism is and have read and understood the section on Assessment Offences in the Essential Information for Students. The work that I have submitted is entirely my own. Any work from other authors is duly referenced and acknowledged.</string>
+    <string name="zero">00</string>
+    <string name="rounds_won">Rounds Won</string>
+    <string name="current_score">Current Score</string>
+    <string name="round">Round</string>
+    <string name="die5">die5</string>
+    <string name="die4">die4</string>
+    <string name="die3">die3</string>
+    <string name="die2">die2</string>
+    <string name="die1">die1</string>
+    <string name="computer">Computer</string>
+    <string name="settings">Settings</string>
+    <string name="score">Score</string>
+    <string name="throwText">Throw</string>
+    <string name="player">Player</string>
+    <string name="_1">1</string>
+    <string name="backgroundimage">backgroundImage</string>
+    <string name="winning_score">Winning Score</string>
+    <string name="_101">101</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="save">Save</string>
 </resources>

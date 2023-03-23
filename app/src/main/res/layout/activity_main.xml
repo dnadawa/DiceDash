@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/image_background"
+    tools:ignore="UsingOnClickInXml"
     android:layout_height="match_parent">
 
     <ImageView
@@ -9,9 +11,10 @@
         android:layout_height="fill_parent"
         android:scaleType="fitCenter"
         android:backgroundTint="@color/background"
-        android:src="@drawable/dice_back" />
+        android:src="@drawable/dice_back"
+        android:contentDescription="@string/backgroundimage" />
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center|bottom"
@@ -26,7 +29,8 @@
             android:onClick="startNewGame"
             android:padding="15dp"
             android:text="@string/new_game"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            />
 
         <Button
             android:layout_marginBottom="60dp"
