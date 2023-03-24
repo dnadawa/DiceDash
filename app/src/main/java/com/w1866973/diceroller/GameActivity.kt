@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -25,103 +24,107 @@ enum class GameResult {
 }
 
 class GameActivity : AppCompatActivity() {
-    var humanScore: Int = 0
-    var computerScore: Int = 0
-    var humanThrowCount: Int = 0
-    var computerThrowCount: Int = 0
-    var round: Int = 1
-    var humanDiceValues = arrayOf(0, 0, 0, 0, 0)
-    var computerDiceValues = arrayOf(0, 0, 0, 0, 0)
-    var isTie: Boolean = false
-    var WINNING_MARK: Int = 101
-    var humanWinCount: Int = 0
-    var computerWinCount: Int = 0
-    var difficulty: Difficulty = Difficulty.EASY
-    var gameResult: GameResult = GameResult.NO_ONE_WIN
+    private var humanScore: Int = 0
+    private var computerScore: Int = 0
+    private var humanThrowCount: Int = 0
+    private var computerThrowCount: Int = 0
+    private var round: Int = 1
+    private var humanDiceValues = arrayOf(0, 0, 0, 0, 0)
+    private var computerDiceValues = arrayOf(0, 0, 0, 0, 0)
+    private var isTie: Boolean = false
+    private var winingMark: Int = 101
+    private var humanWinCount: Int = 0
+    private var computerWinCount: Int = 0
+    private var difficulty: Difficulty = Difficulty.EASY
+    private var gameResult: GameResult = GameResult.NO_ONE_WIN
 
-    lateinit var humanDie1: ImageView
-    lateinit var humanDie2: ImageView
-    lateinit var humanDie3: ImageView
-    lateinit var humanDie4: ImageView
-    lateinit var humanDie5: ImageView
+    private lateinit var humanDie1: ImageView
+    private lateinit var humanDie2: ImageView
+    private lateinit var humanDie3: ImageView
+    private lateinit var humanDie4: ImageView
+    private lateinit var humanDie5: ImageView
 
-    lateinit var computerDie1: ImageView
-    lateinit var computerDie2: ImageView
-    lateinit var computerDie3: ImageView
-    lateinit var computerDie4: ImageView
-    lateinit var computerDie5: ImageView
+    private lateinit var computerDie1: ImageView
+    private lateinit var computerDie2: ImageView
+    private lateinit var computerDie3: ImageView
+    private lateinit var computerDie4: ImageView
+    private lateinit var computerDie5: ImageView
 
-    lateinit var scoreButton: Button
-    lateinit var throwButton: Button
-    lateinit var settingsButton: Button
+    private lateinit var scoreButton: Button
+    private lateinit var throwButton: Button
+    private lateinit var settingsButton: Button
 
-    lateinit var roundLabel: TextView
-    lateinit var humanWinsLabel: TextView
-    lateinit var computerWinsLabel: TextView
-    lateinit var humanScoreLabel: TextView
-    lateinit var computerScoreLabel: TextView
+    private lateinit var roundLabel: TextView
+    private lateinit var humanWinsLabel: TextView
+    private lateinit var computerWinsLabel: TextView
+    private lateinit var humanScoreLabel: TextView
+    private lateinit var computerScoreLabel: TextView
 
     private lateinit var humanDice: Array<ImageView>
     private lateinit var computerDice: Array<ImageView>
 
+    //constants
+    private val AVERAGE_SCORE_FOR_A_ROUND: Int = 18
+    private val THRESHOLD_PERCENTAGE: Int = 20
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        WINNING_MARK = intent.getIntExtra("winningScore", WINNING_MARK)
+        //get data from previous activity
+        winingMark = intent.getIntExtra("winningScore", winingMark)
         humanWinCount = intent.getIntExtra("humanWinCount", 0)
         computerWinCount = intent.getIntExtra("computerWinCount", 0)
         difficulty =
             Difficulty.valueOf(intent.getStringExtra("difficulty") ?: Difficulty.EASY.toString())
 
-        roundLabel = findViewById<TextView>(R.id.lblRound)
-        humanWinsLabel = findViewById<TextView>(R.id.lblHumanWins)
-        computerWinsLabel = findViewById<TextView>(R.id.lblComputerWins)
+        roundLabel = findViewById(R.id.lblRound)
+        humanWinsLabel = findViewById(R.id.lblHumanWins)
+        computerWinsLabel = findViewById(R.id.lblComputerWins)
 
-        humanDie1 = findViewById<ImageView>(R.id.humDie1)
-        humanDie2 = findViewById<ImageView>(R.id.humDie2)
-        humanDie3 = findViewById<ImageView>(R.id.humDie3)
-        humanDie4 = findViewById<ImageView>(R.id.humDie4)
-        humanDie5 = findViewById<ImageView>(R.id.humDie5)
+        humanDie1 = findViewById(R.id.humDie1)
+        humanDie2 = findViewById(R.id.humDie2)
+        humanDie3 = findViewById(R.id.humDie3)
+        humanDie4 = findViewById(R.id.humDie4)
+        humanDie5 = findViewById(R.id.humDie5)
 
-        computerDie1 = findViewById<ImageView>(R.id.compDie1)
-        computerDie2 = findViewById<ImageView>(R.id.compDie2)
-        computerDie3 = findViewById<ImageView>(R.id.compDie3)
-        computerDie4 = findViewById<ImageView>(R.id.compDie4)
-        computerDie5 = findViewById<ImageView>(R.id.compDie5)
+        computerDie1 = findViewById(R.id.compDie1)
+        computerDie2 = findViewById(R.id.compDie2)
+        computerDie3 = findViewById(R.id.compDie3)
+        computerDie4 = findViewById(R.id.compDie4)
+        computerDie5 = findViewById(R.id.compDie5)
 
-        scoreButton = findViewById<Button>(R.id.btnScore)
-        throwButton = findViewById<Button>(R.id.btnThrow)
-        settingsButton = findViewById<Button>(R.id.btnSettings)
+        scoreButton = findViewById(R.id.btnScore)
+        throwButton = findViewById(R.id.btnThrow)
+        settingsButton = findViewById(R.id.btnSettings)
 
-
-        humanScoreLabel = findViewById<TextView>(R.id.lblHumScore)
-        computerScoreLabel = findViewById<TextView>(R.id.lblCompScore)
+        humanScoreLabel = findViewById(R.id.lblHumScore)
+        computerScoreLabel = findViewById(R.id.lblCompScore)
 
         humanDice = arrayOf(humanDie1, humanDie2, humanDie3, humanDie4, humanDie5)
         computerDice =
             arrayOf(computerDie1, computerDie2, computerDie3, computerDie4, computerDie5)
 
-        //custom back behaviour
+        //set intent extra when back button pressed and finish this activity
         //https://stackoverflow.com/questions/58256210/how-to-make-custom-back-button-to-go-back-to-certain-destination-using-navigatio
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 intent.putExtra("humanWinCount", humanWinCount)
                 intent.putExtra("computerWinCount", computerWinCount)
-                intent.putExtra("winningScore", WINNING_MARK)
+                intent.putExtra("winningScore", winingMark)
                 intent.putExtra("difficulty", difficulty.toString())
                 setResult(RESULT_OK, intent)
                 finish()
             }
         })
 
-
+        //make status bar hide in landscape mode
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
 
-        //set values
+        //restore values when configuration changes
         if (savedInstanceState != null) {
             humanScore = savedInstanceState.getInt("humanScore")
             computerScore = savedInstanceState.getInt("computerScore")
@@ -135,12 +138,13 @@ class GameActivity : AppCompatActivity() {
             computerWinCount = savedInstanceState.getInt("computerWinCount")
             gameResult = GameResult.valueOf(savedInstanceState.getString("gameResult")!!)
             difficulty = Difficulty.valueOf(savedInstanceState.getString("difficulty")!!)
-            WINNING_MARK = savedInstanceState.getInt("WINNING_MARK")
+            winingMark = savedInstanceState.getInt("WINNING_MARK")
             humanDiceValues = savedInstanceState.getIntArray("humanDiceValues")!!.toTypedArray()
             computerDiceValues =
                 savedInstanceState.getIntArray("computerDiceValues")!!.toTypedArray()
             val fetchedHumanDice = savedInstanceState.getSerializable("humanDice")!! as Array<ImageView>
 
+            //set dice face images and selected dice
             for (i in fetchedHumanDice.indices) {
                 humanDice[i].setImageURI((Uri.parse("android.resource://$packageName/drawable/die${humanDiceValues[i]}")))
                 computerDice[i].setImageURI((Uri.parse("android.resource://$packageName/drawable/die${computerDiceValues[i]}")))
@@ -148,9 +152,8 @@ class GameActivity : AppCompatActivity() {
                 humanDice[i].isSelected = fetchedHumanDice[i].isSelected
                 changeDieColor(humanDice[i])
             }
-
-
         }
+
         humanScoreLabel.text = humanScore.toString()
         computerScoreLabel.text = computerScore.toString()
         roundLabel.text = round.toString()
@@ -158,9 +161,9 @@ class GameActivity : AppCompatActivity() {
         computerWinsLabel.text = computerWinCount.toString()
     }
 
+    //save data when configuration changes
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
         outState.putInt("humanScore", humanScore)
         outState.putInt("computerScore", computerScore)
         outState.putInt("humanThrowCount", humanThrowCount)
@@ -172,63 +175,69 @@ class GameActivity : AppCompatActivity() {
         outState.putInt("humanWinCount", humanWinCount)
         outState.putInt("computerWinCount", computerWinCount)
         outState.putString("gameResult", gameResult.toString())
-        outState.putInt("WINNING_MARK", WINNING_MARK)
+        outState.putInt("WINNING_MARK", winingMark)
         outState.putString("difficulty", difficulty.toString())
         outState.putIntArray("humanDiceValues", humanDiceValues.toIntArray())
         outState.putIntArray("computerDiceValues", computerDiceValues.toIntArray())
         outState.putSerializable("humanDice", humanDice)
     }
 
+    //restore you win/lose dialog if screen rotate while the dialog open
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (gameResult == GameResult.HUMAN_WIN) {
-            showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
+            showResultWindow("You win!", ContextCompat.getColor(this, R.color.green))
         } else if (gameResult == GameResult.COMPUTER_WIN) {
-            showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
+            showResultWindow("You lose!", ContextCompat.getColor(this, R.color.red))
         }
     }
 
-    fun throwDice(view: View) {
+    fun onThrowButtonPressed(view: View) {
         settingsButton.isEnabled = false
 
         if (!isTie) {
             for (die in humanDice) {
                 die.isClickable = true
             }
-
             scoreButton.isEnabled = true
         }
 
+        //throw human dice
         humanThrowCount++
+        throwDiceForSinglePlayer(humanDice, humanDiceValues)
 
-        throwSinglePartyDice(humanDice, humanDiceValues)
+        //initial throw of the computer
         if (humanThrowCount == 1) {
-            println("Computer throwing")
             computerThrowCount++
-            throwSinglePartyDice(computerDice, computerDiceValues)
+            throwDiceForSinglePlayer(computerDice, computerDiceValues)
         }
 
-
-
+        //when round ends, play computer strategy and calculate store
         if (humanThrowCount > 2 || isTie) {
-            if (!isTie) {
-
-                if (difficulty == Difficulty.HARD) {
-                    computerHardStrategy()
-                } else {
-                    computerEasyStrategy()
-                }
-            }
-
-            println("outside hard strategy")
-            calculateScore()
+            endRound()
         }
     }
 
-    private fun throwSinglePartyDice(dice: Array<ImageView>, diceValues: Array<Int>) {
+    fun onScoreButtonPressed(view: View) {
+        endRound()
+    }
+
+    fun toggleSelected(view: View) {
+        val imageView = findViewById<ImageView>(view.id)
+        view.isSelected = !view.isSelected
+        changeDieColor(imageView)
+    }
+
+    fun onSettingButtonPressed(view: View){
+        showSettingsWindow()
+    }
+
+    private fun throwDiceForSinglePlayer(dice: Array<ImageView>, diceValues: Array<Int>) {
         val rnd: Random = Random()
         var count = 0
-        while (count < 5) {
+
+        //set random die faces for each die
+        while (count < dice.size) {
             val dieValue = rnd.nextInt(6) + 1
 
             if (!dice[count].isSelected) {
@@ -239,25 +248,25 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun onScoreButtonPressed(view: View) {
-        if (difficulty == Difficulty.HARD) {
-            computerHardStrategy()
-        } else {
-            computerEasyStrategy()
+    private fun endRound() {
+        if (!isTie) {
+            if (difficulty == Difficulty.HARD) {
+                computerHardStrategy()
+            } else {
+                computerEasyStrategy()
+            }
         }
 
         calculateScore()
     }
 
     private fun computerEasyStrategy() {
-        println("Entered into easy strategy")
         val rand = Random()
 
-        val reRolls: Int = rand.nextInt(3)
+        val reRolls: Int = rand.nextInt(3) //check how many rolls that the computer roll
         for (i in 0 until reRolls) {
-            println("Rerolling")
             val numberOfDiceToKeep: Int = rand.nextInt(5)
-            println("no of dice keeping: $numberOfDiceToKeep")
+
             var count: Int = 0
             val uniqueKeptDice = mutableSetOf<Int>()
             while (count < numberOfDiceToKeep) {
@@ -266,11 +275,10 @@ class GameActivity : AppCompatActivity() {
                     keepingDie = rand.nextInt(5)
                 }
                 uniqueKeptDice.add(keepingDie)
-                println("keeping die: $keepingDie")
                 computerDice[keepingDie].isSelected = true
                 count++
             }
-            throwSinglePartyDice(computerDice, computerDiceValues)
+            throwDiceForSinglePlayer(computerDice, computerDiceValues)
 
             //clearing all selected dice
             for (die in computerDice) {
@@ -280,94 +288,88 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun computerHardStrategy() {
-        println("human : " + humanScore)
-        println("computer : " + computerScore)
-
         var remainingReRolls: Int = 2
         while (remainingReRolls > 0) {
-            println("Inside while remaining rerolls: $remainingReRolls")
 
             //calculate current roll of the computer
             var currentRollScore: Int = 0
             for (score in computerDiceValues) {
-                println("Computer dices: $score")
                 currentRollScore += score
             }
-            println("Current round computer score: $currentRollScore")
 
-            //determine threshold value
-            val thresholdPercentage: Int = 20
-            val thresholdValue: Int = WINNING_MARK * thresholdPercentage / 100
-            println("thresholdValue $thresholdValue")
+            //determine threshold value that is used to check whether the current score
+            // is close to the winning score
+            val thresholdValue: Int = winingMark * THRESHOLD_PERCENTAGE / 100
 
-            if (computerScore + currentRollScore >= WINNING_MARK - thresholdValue) {
-                println("Computer is closer to the target score")
+            //keep only 4,5,6 if computer is close to the winning mark
+            if (computerScore + currentRollScore >= winingMark - thresholdValue) {
                 val endRound = keepOrReRoll(arrayOf(4, 5, 6))
                 if (endRound) {
-                    println("end of round")
                     break
                 }
             } else {
-                println("Computer is NOT closer to the target score")
-                if (humanScore + 18 > computerScore + currentRollScore) {
-                    println("human wining")
-                    val endRound = keepOrReRoll(arrayOf(4, 5, 6))
+                //add the averageScore for the round to the human and compare scores
+                if (humanScore + AVERAGE_SCORE_FOR_A_ROUND > computerScore + currentRollScore) {
+                    val endRound = keepOrReRoll(arrayOf(4, 5, 6)) //keep only 4,5,6 if human is in lead
                     if (endRound) {
-                        println("end of round")
                         break
                     }
                 } else {
-                    println("Computer wining")
-                    val endRound = keepOrReRoll(arrayOf(3, 4, 5, 6))
+                    val endRound = keepOrReRoll(arrayOf(3, 4, 5, 6))//keep only 3,4,5,6 if computer is in lead
                     if (endRound) {
-                        println("end of round")
                         break
                     }
                 }
             }
             remainingReRolls--
         }
-        println("While end")
     }
 
     private fun keepOrReRoll(keepingValues: Array<Int>): Boolean {
         var isReRoll: Boolean = false
-        for (i in 0..4) {
+        //select keeping dice
+        for (i in computerDice.indices) {
             if (computerDiceValues[i] in keepingValues) {
-                println("die face ${computerDiceValues[i]} is keeping")
                 computerDice[i].isSelected = true
             } else {
-                println("die face ${computerDiceValues[i]} is NOT keeping")
                 isReRoll = true
             }
         }
 
+        //re-roll if all dice are not keeping
         if (isReRoll) {
-            println("Rerolling")
-            throwSinglePartyDice(computerDice, computerDiceValues)
+            throwDiceForSinglePlayer(computerDice, computerDiceValues)
             return false
         } else {
-            println("not rerolling")
             return true
         }
+    }
+
+    private fun calculateTotal(values: Array<Int>): Int {
+        var total = 0
+        for (n in values) {
+            total += n
+        }
+
+        return total
     }
 
     private fun calculateScore() {
         scoreButton.isEnabled = false
 
-        for (n in humanDiceValues) {
-            humanScore += n
-        }
-        for (n in computerDiceValues) {
-            computerScore += n
-        }
+        //calculate scores
+        humanScore += calculateTotal(humanDiceValues)
+        computerScore += calculateTotal(computerDiceValues)
 
+        //setting scores
         humanScoreLabel.text = humanScore.toString()
         computerScoreLabel.text = computerScore.toString()
 
+        //resetting re-roll count
         humanThrowCount = 0
         computerThrowCount = 0
 
+        //reset dice
         for (die in humanDice) {
             die.isSelected = false
             die.isClickable = false
@@ -377,39 +379,40 @@ class GameActivity : AppCompatActivity() {
             die.isSelected = false
         }
 
-
-        if (humanScore >= WINNING_MARK) {
+        //determine the winner
+        if (humanScore >= winingMark) {
             if (humanScore > computerScore) {
-                humanWinCount++
-                humanWinsLabel.text = humanWinCount.toString()
                 gameResult = GameResult.HUMAN_WIN
-                showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
+                processWin(gameResult)
             } else if (computerScore > humanScore) {
-                computerWinCount++
-                computerWinsLabel.text = computerWinCount.toString()
                 gameResult = GameResult.COMPUTER_WIN
-                showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
+                processWin(gameResult)
             } else {
                 isTie = true
             }
-        } else if (computerScore >= WINNING_MARK) {
-            computerWinCount++
-            computerWinsLabel.text = computerWinCount.toString()
+        } else if (computerScore >= winingMark) {
             gameResult = GameResult.COMPUTER_WIN
-            showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
+            processWin(gameResult)
         } else {
             round++
             roundLabel.text = round.toString()
         }
     }
 
-    fun toggleSelected(view: View) {
-        val imageView = findViewById<ImageView>(view.id)
-        view.isSelected = !view.isSelected
-        changeDieColor(imageView)
+    private fun processWin(gameResult: GameResult){
+        if(gameResult == GameResult.HUMAN_WIN){
+            humanWinCount++
+            humanWinsLabel.text = humanWinCount.toString()
+            showResultWindow("You win!", ContextCompat.getColor(this, R.color.green))
+        } else if (gameResult == GameResult.COMPUTER_WIN){
+            computerWinCount++
+            computerWinsLabel.text = computerWinCount.toString()
+            showResultWindow("You lose!", ContextCompat.getColor(this, R.color.red))
+        }
     }
 
     private fun changeDieColor(imageView: ImageView) {
+        //set selected color in die
         if (imageView.isSelected) {
             imageView.setColorFilter(
                 ContextCompat.getColor(this, R.color.primary),
@@ -423,14 +426,15 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun showPopupWindow(message: String, textColor: Int) {
+    private fun showResultWindow(message: String, textColor: Int) {
         val inflater: LayoutInflater =
             getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView: View = inflater.inflate(R.layout.game_result_dialog, null)
 
-        val messageTextView = popupView.findViewById<TextView>(R.id.lblWinningStatus)
-        messageTextView.text = message
-        messageTextView.setTextColor(textColor)
+        //set the text and color
+        val textView = popupView.findViewById<TextView>(R.id.lblWinningStatus)
+        textView.text = message
+        textView.setTextColor(textColor)
 
         val popupWindow = PopupWindow(
             popupView,
@@ -453,14 +457,15 @@ class GameActivity : AppCompatActivity() {
         overlayView.setOnClickListener {}
     }
 
-    fun showSettingsDialog(view: View) {
+    private fun showSettingsWindow() {
         val inflater: LayoutInflater =
             getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView: View = inflater.inflate(R.layout.settings_dialog, null)
-        val textField: EditText = popupView.findViewById<EditText>(R.id.txtScore);
 
-        if (WINNING_MARK != 101) {
-            textField.setText(WINNING_MARK.toString())
+        //set edit text value if it is set
+        val textField: EditText = popupView.findViewById(R.id.txtScore);
+        if (winingMark != 101) {
+            textField.setText(winingMark.toString())
         }
 
         val popupWindow = PopupWindow(
@@ -487,11 +492,12 @@ class GameActivity : AppCompatActivity() {
         spinner.adapter = adapter
         spinner.setSelection(adapter.getPosition(difficulty))
 
+        //on save button pressed
         popupView.findViewById<Button>(R.id.btnSave).setOnClickListener {
             difficulty = spinner.selectedItem as Difficulty
             val enteredScore = textField.text.toString()
             if (enteredScore.trim().isNotEmpty()) {
-                WINNING_MARK = Integer.parseInt(enteredScore)
+                winingMark = Integer.parseInt(enteredScore)
             }
             popupWindow.dismiss()
         }
