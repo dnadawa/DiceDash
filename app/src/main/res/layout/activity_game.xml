@@ -242,8 +242,7 @@
         android:layout_height="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="?android:attr/listDivider"
-        android:foreground="@color/secondary" />
+        android:background="@color/secondary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -302,8 +301,7 @@
         android:layout_height="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="?android:attr/listDivider"
-        android:foreground="@color/secondary" />
+        android:background="@color/secondary" />
 
     <TextView
         android:id="@+id/textView13"

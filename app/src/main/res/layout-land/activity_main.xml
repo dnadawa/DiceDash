@@ -14,18 +14,10 @@
         android:backgroundTint="@color/background"
         android:src="@drawable/dice_back"
         android:contentDescription="@string/backgroundimage" />
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_gravity="top|center"
-        android:layout_margin="50dp"
-        app:srcCompat="@drawable/logo"
-        android:contentDescription="@string/logo" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center|bottom"
+        android:gravity="center"
         android:orientation="vertical"
         tools:context=".MainActivity">
 
@@ -43,7 +35,6 @@
             />
 
         <Button
-            android:layout_marginBottom="60dp"
             android:id="@+id/btnAbout"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
