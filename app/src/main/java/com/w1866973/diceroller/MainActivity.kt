@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var WINNING_SCORE: Int = 101
     private var humanWinCount: Int = 0
     private var computerWinCount: Int = 0
+    private var difficulty: Difficulty = Difficulty.EASY
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
                 if(data != null){
                     humanWinCount = data.getIntExtra("humanWinCount", 0)
                     computerWinCount = data.getIntExtra("computerWinCount", 0)
+                    WINNING_SCORE = data.getIntExtra("winningScore", WINNING_SCORE)
+                    difficulty = Difficulty.valueOf(data.getStringExtra("difficulty") ?: Difficulty.EASY.toString())
                 }
             }
         }
@@ -76,9 +79,10 @@ class MainActivity : AppCompatActivity() {
 
     fun startNewGame(view: View){
         val intent = Intent(this, GameActivity::class.java)
-//        intent.putExtra("winningScore", WINNING_SCORE)
+        intent.putExtra("winningScore", WINNING_SCORE)
         intent.putExtra("humanWinCount", humanWinCount)
         intent.putExtra("computerWinCount", computerWinCount)
+        intent.putExtra("difficulty", difficulty.toString())
         resultLauncher.launch(intent)
     }
 

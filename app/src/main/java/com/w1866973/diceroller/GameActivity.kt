@@ -58,9 +58,10 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-//        WINNING_MARK = intent.getIntExtra("winningScore", WINNING_MARK)
+        WINNING_MARK = intent.getIntExtra("winningScore", WINNING_MARK)
         humanWinCount = intent.getIntExtra("humanWinCount", 0)
         computerWinCount = intent.getIntExtra("computerWinCount", 0)
+        difficulty = Difficulty.valueOf(intent.getStringExtra("difficulty") ?: Difficulty.EASY.toString())
 
         roundLabel = findViewById<TextView>(R.id.lblRound)
         humanWinsLabel = findViewById<TextView>(R.id.lblHumanWins)
@@ -94,6 +95,8 @@ class GameActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 intent.putExtra("humanWinCount", humanWinCount)
                 intent.putExtra("computerWinCount", computerWinCount)
+                intent.putExtra("winningScore", WINNING_MARK)
+                intent.putExtra("difficulty", difficulty.toString())
                 setResult(RESULT_OK, intent)
                 finish()
             }
@@ -381,6 +384,11 @@ class GameActivity : AppCompatActivity() {
         val inflater: LayoutInflater =
             getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView: View = inflater.inflate(R.layout.settings_dialog, null)
+        val textField: EditText = popupView.findViewById<EditText>(R.id.txtScore);
+
+        if(WINNING_MARK != 101){
+            textField.setText(WINNING_MARK.toString())
+        }
 
         val popupWindow = PopupWindow(
             popupView,
@@ -404,11 +412,11 @@ class GameActivity : AppCompatActivity() {
             )
         adapter.setDropDownViewResource(R.layout.spinner_item)
         spinner.adapter = adapter
-
+        spinner.setSelection(adapter.getPosition(difficulty))
 
         popupView.findViewById<Button>(R.id.btnSave).setOnClickListener {
             difficulty = spinner.selectedItem as Difficulty
-            val enteredScore = popupView.findViewById<EditText>(R.id.txtScore).text.toString()
+            val enteredScore = textField.text.toString()
             if (enteredScore.trim().isNotEmpty()) {
                 WINNING_MARK = Integer.parseInt(enteredScore)
             }
