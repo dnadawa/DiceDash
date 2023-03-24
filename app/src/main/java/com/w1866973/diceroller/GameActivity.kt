@@ -64,8 +64,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var humanDice: Array<ImageView>
     private lateinit var computerDice: Array<ImageView>
 
-    var popUpAlreadyShown: Boolean = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -74,7 +72,6 @@ class GameActivity : AppCompatActivity() {
         computerWinCount = intent.getIntExtra("computerWinCount", 0)
         difficulty =
             Difficulty.valueOf(intent.getStringExtra("difficulty") ?: Difficulty.EASY.toString())
-        popUpAlreadyShown = false
 
         roundLabel = findViewById<TextView>(R.id.lblRound)
         humanWinsLabel = findViewById<TextView>(R.id.lblHumanWins)
@@ -182,15 +179,12 @@ class GameActivity : AppCompatActivity() {
         outState.putSerializable("humanDice", humanDice)
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && !popUpAlreadyShown) {
-            if (gameResult == GameResult.HUMAN_WIN) {
-                showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
-            } else if (gameResult == GameResult.COMPUTER_WIN) {
-                showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
-            }
-            popUpAlreadyShown = true
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (gameResult == GameResult.HUMAN_WIN) {
+            showPopupWindow("You win!", ContextCompat.getColor(this, R.color.green))
+        } else if (gameResult == GameResult.COMPUTER_WIN) {
+            showPopupWindow("You lose!", ContextCompat.getColor(this, R.color.red))
         }
     }
 

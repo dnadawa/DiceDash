@@ -48,7 +48,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/primary"
-            android:onClick="showAboutDialog"
+            android:onClick="onAboutButtonPressed"
             android:padding="15dp"
             android:text="@string/about"
             android:textColor="@color/white" />

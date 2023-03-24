@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private var humanWinCount: Int = 0
     private var computerWinCount: Int = 0
     private var difficulty: Difficulty = Difficulty.EASY
+    private var isAboutShowing: Boolean = false
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,31 +27,62 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
-        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                if(data != null){
-                    humanWinCount = data.getIntExtra("humanWinCount", 0)
-                    computerWinCount = data.getIntExtra("computerWinCount", 0)
-                    WINNING_SCORE = data.getIntExtra("winningScore", WINNING_SCORE)
-                    difficulty = Difficulty.valueOf(data.getStringExtra("difficulty") ?: Difficulty.EASY.toString())
+        resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data: Intent? = result.data
+                    if (data != null) {
+                        humanWinCount = data.getIntExtra("humanWinCount", 0)
+                        computerWinCount = data.getIntExtra("computerWinCount", 0)
+                        WINNING_SCORE = data.getIntExtra("winningScore", WINNING_SCORE)
+                        difficulty = Difficulty.valueOf(
+                            data.getStringExtra("difficulty") ?: Difficulty.EASY.toString()
+                        )
+                    }
                 }
             }
-        }
 
         //https://stackoverflow.com/questions/11856886/hiding-title-bar-notification-bar-when-device-is-oriented-to-landscape
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        }
-        else {
+        } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
+
+        if (savedInstanceState != null) {
+            humanWinCount = savedInstanceState.getInt("humanWinCount")
+            computerWinCount = savedInstanceState.getInt("computerWinCount")
+            WINNING_SCORE = savedInstanceState.getInt("WINNING_SCORE")
+            isAboutShowing = savedInstanceState.getBoolean("isAboutShowing")
+            difficulty = Difficulty.valueOf(savedInstanceState.getString("difficulty")!!)
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("WINNING_SCORE", WINNING_SCORE)
+        outState.putInt("humanWinCount", humanWinCount)
+        outState.putInt("computerWinCount", computerWinCount)
+        outState.putString("difficulty", difficulty.toString())
+        outState.putBoolean("isAboutShowing", isAboutShowing)
+    }
 
-    fun showAboutDialog(view: View) {
-        val inflater: LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popupView : View = inflater.inflate(R.layout.about_dialog, null)
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (isAboutShowing) {
+            showAboutDialog()
+        }
+    }
+
+    fun onAboutButtonPressed(view: View) {
+        showAboutDialog()
+    }
+
+    fun showAboutDialog() {
+        isAboutShowing = true
+        val inflater: LayoutInflater =
+            getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView: View = inflater.inflate(R.layout.about_dialog, null)
 
         val popupWindow = PopupWindow(
             popupView,
@@ -72,12 +104,13 @@ class MainActivity : AppCompatActivity() {
         )
         parentView.addView(overlayView, params)
         overlayView.setOnClickListener {
+            isAboutShowing = false
             popupWindow.dismiss()
             parentView.removeView(overlayView)
         }
     }
 
-    fun startNewGame(view: View){
+    fun startNewGame(view: View) {
         val intent = Intent(this, GameActivity::class.java)
         intent.putExtra("winningScore", WINNING_SCORE)
         intent.putExtra("humanWinCount", humanWinCount)
