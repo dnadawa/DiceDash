@@ -1,3 +1,6 @@
+//video link
+//https://drive.google.com/file/d/1ZtRhimjLi9sBMh4xd95kWOkqT1_F5RCR/view?usp=sharing
+
 package com.w1866973.diceroller
 
 import android.app.Activity
