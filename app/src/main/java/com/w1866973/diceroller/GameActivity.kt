@@ -288,6 +288,26 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun computerHardStrategy() {
+        //The computer strategy consider the human score so far, the target score, computer score
+        //and the current roll of the computer.
+        //First, the computer calculate the score of its current roll.
+        //Then, it calculate the threshold value using the targetScore.
+        //If the computer score(including this round) is close to the target score it will keep the 4,5,6 dice and re-roll the rest.
+        //Otherwise, it consider human score.
+        //  -   Calculate the human score (including this round) by adding the average score per round to the human score so far
+        //  -   average is calculated by (maximumScorePossible + minScorePossible)/2 = (30 + 5)/2 = 17.5 round to 18.
+        //  -   Check if current roll and computer score is less than the calculated human score
+        //  -   if human is in lead, keep 4,5,6 dice and re-roll rest
+        //  -   if computer is in lead, keep 3,4,5,6 dice and re-roll rest
+        //The computer is playing both the optional re-rolls but the re-rolling dice are different in this algorithm.
+
+        //ADVANTAGES
+        // - The algorithm considers both the computer's and the human's scores to make optimal decisions.
+        // - The algorithm uses both of computer re-rolls to maximize the score.
+
+        //DISADVANTAGES
+        // - Human player's current roll score is taken as the average, which may be not be optimum.
+
         var remainingReRolls: Int = 2
         while (remainingReRolls > 0) {
 
