@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 class SplashScreenActivity : AppCompatActivity() {
 
     lateinit var progressBar: ProgressBar
+    var progressValue: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
@@ -31,18 +33,26 @@ class SplashScreenActivity : AppCompatActivity() {
         else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
+
+        if(savedInstanceState != null){
+            progressValue = savedInstanceState.getInt("progress", 0)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("progress", progressValue)
     }
 
     private fun doWork() {
-        var progress = 0
-        while (progress < 100) {
+        while (progressValue < 100) {
             try {
                 Thread.sleep(30)
-                progressBar.progress = progress
+                progressBar.progress = progressValue
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            progress += 1
+            progressValue += 1
         }
     }
 
